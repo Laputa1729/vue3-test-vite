@@ -16,7 +16,7 @@ import { ref } from 'vue'
 export default {
   name: 'App',
   setup() {
-    // ref() 定义响应式数据
+    // ref() 定义响应式数据（多用于基本数据类型）
     let name = ref('张三');  // => RefImpl {...value} 引用实现对象
     let age = ref(18);
     let job = ref({
