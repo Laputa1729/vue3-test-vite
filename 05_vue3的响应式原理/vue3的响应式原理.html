@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>vue3的响应式原理</title>
+  </head>
+  <body>
+
+    <script>
+      // 源数据
+      let person = {
+        name: '张三',
+        age: 18,
+      };
+
+      // #region
+      /*
+      let p = {};
+      Object.defineProperty(p, 'name', {
+        get() {
+          return person.name;
+        },
+        set(value) {
+          console.log('有人修改了 name 属性！');
+          person.name = value;
+        }
+      });
+      Object.defineProperty(p, 'age', {
+        get() {
+          return person.age;
+        },
+        set(value) {
+          console.log('有人修改了 age 属性！');
+          person.age = value;
+        }
+      });
+      */
+      // #endregion
+
+      // 模拟 vue3 中实现响应式
+      const p = new Proxy(person, {
+        // 读取
+        get(target, propName) {
+          console.log(`有人读取了 p 身上的 ${ propName } 属性。`);
+          // return target[propName];
+          return Reflect.get(target, propName);
+        },
+        // 修改/新增
+        set(target, propName, value) {
+          console.log(`%c有人修改了 p 身上的 ${ propName } 属性，我要去更新模板了！`, 'color: #0000ff');
+          // target[propName] = value;
+          Reflect.set(target, propName, value);
+        },
+        // 删除属性也能捕获到
+        deleteProperty(target, propName) {
+          console.log(`%c有人删除了 p 身上的 ${ propName } 属性，我要去更新模板了！`, 'color: red');
+          // return delete target[propName];
+          return Reflect.deleteProperty(target, propName);
+        }
+      });
+
+    </script>
+  </body>
+</html>
+
