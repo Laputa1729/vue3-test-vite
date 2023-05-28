@@ -19,7 +19,7 @@ export default {
 
   /* setup 钩子先于在 beforeCreate */
   beforeCreate() {
-    console.log('---beforeCreate---', this);
+    console.log('---beforeCreate---');
   },
   setup(props, context) {
     console.log('---setup---', props, context);
