@@ -1,41 +1,54 @@
 <template>
   <h1>一个人的信息</h1>
-  <h2>姓名：{{ person.name }}</h2>
-  <h2>年龄：{{ person.age }}</h2>
-  <button @click="test1">点击触发 hello 事件</button>
-  <hr>
-  <div><slot></slot></div>
-  <div><slot name="qwe"></slot></div>
-  <div><slot name="asd"></slot></div>
+  姓：<input type="text" v-model="person.firstName">
+  <br>
+  名：<input type="text" v-model="person.lastName">
+  <br>
+  <span>全名：{{ person.fullName }}</span>
+  <br>
+  <!-- 改写计算属性 -->
+  全名：<input type="text" v-model="person.fullName">
+
 </template>
 
 <script>
-import { reactive } from 'vue'
+import { reactive, computed } from 'vue'
 
 export default {
   name: 'Demo',
-  props: ['msg', 'school'],
-  emits: ['hello'],
+  // computed: {
+  //   fullName() {
+  //     return this.person.firstName + '-' + this.person.lastName;
+  //   },
+  // },
 
-  /* setup 钩子先于在 beforeCreate */
-  beforeCreate() {
-    console.log('---beforeCreate---', this);
-  },
-  setup(props, context) {
-    console.log('---setup---', props, context);
+  setup() {
     // 数据
     let person = reactive({
-      name: '张三',
-      age: 18,
+      firstName: '张',
+      lastName: '三',
     });
+    /*
+    // 计算属性——简写
+    person.fullName = computed(() => {
+      return person.firstName + ' - ' + person.lastName;
+    });
+    */
 
-    function test1() {
-      context.emit('hello', 666);
-    }
+    // 计算属性（考虑到读和写）
+    person.fullName = computed({
+      get() {
+        return person.firstName + '-' + person.lastName;
+      },
+      set(value) {
+        const nameArr = value.split('-');
+        person.firstName = nameArr[0];
+        person.lastName = nameArr[1];
+      }
+    });
 
     return {
       person,
-      test1,
     }
   }
 }
